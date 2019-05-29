@@ -5,9 +5,10 @@ package models
 	that are available
 */
 type Model struct {
-	Fields []Field
-	Name string
-	Table string
+	Fields         []Field
+	ColumnMappings map[string]string
+	Name           string
+	Table          string
 }
 
 type DatabasePayload struct {

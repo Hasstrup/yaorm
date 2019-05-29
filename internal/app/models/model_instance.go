@@ -1,16 +1,17 @@
-package models 
+package models
 
 import (
 	"reflect"
+
 	"github.com/hasstrup/yaorm/internal/app/errors"
 )
 
 type ModelInstance struct {
 	Model
-	Mappings []Mapping
-	Columns []string
+	Values    []Mapping
+	Columns   []string
 	RowNumber int
-	Errors []errors.DatabaseOpError
+	Errors    []errors.DatabaseOpError
 }
 
 type Mapping struct {
@@ -18,15 +19,15 @@ type Mapping struct {
 	Value interface{}
 }
 
-func (m *ModelInstance) Save() bool {
-   return true
-}
+// func (m *ModelInstance) Save(options map[string]interface{}) bool {
+
+// }
 
 func (m *ModelInstance) Valid() bool {
-	if (len(m.Mappings) == 0) {
+	if len(m.Values) == 0 {
 		return false
 	}
-	for _, mapping := range m.Mappings {
+	for _, mapping := range m.Values {
 		if typeOf(mapping.Value) != mapping.Field.DataType {
 			return false
 		}
@@ -41,13 +42,13 @@ func (m *ModelInstance) ToJson() {
 func (m *ModelInstance) BuildAttributes(attrs map[string]interface{}) {
 	mappings := []Mapping{}
 	for _, field := range m.Fields {
-	  mapping := Mapping{
-		  Field: field,
-		  Value: attrs[field.ColumnName],
-	  }
-	  mappings = append(mappings, mapping)
-  }
-  m.Mappings = mappings
+		mapping := Mapping{
+			Field: field,
+			Value: attrs[field.ColumnName],
+		}
+		mappings = append(mappings, mapping)
+	}
+	m.Values = mappings
 }
 
 func typeOf(val interface{}) string {
