@@ -6,6 +6,8 @@ package models
 */
 type Model struct {
 	Fields []Field
+	Name string
+	Table string
 }
 
 type DatabasePayload struct {
@@ -31,8 +33,9 @@ func (m Model) BulkCreate() []DatabasePayload {
 	return []DatabasePayload{}
 }
 
-func (m Model) New() *ModelInstance {
+func (m Model) New(attributes map[string]interface{}) *ModelInstance {
 	instance := &ModelInstance{}
 	instance.Model = m
+	instance.BuildAttributes(attributes)
 	return instance
 }
